@@ -15,8 +15,8 @@ NUMBER_OF_NEXT_BUSES = 2
 GOOGLE_CHART_API_URL = "https://chart.googleapis.com/chart?"
 ABSOLUTE_URL = "http://m.test.com/s/"
 
-# Get an instance of a logger
 logger = logging.getLogger("wheresmybus")
+
 
 class Line(object):
     """docstring for StopDB"""
@@ -32,11 +32,13 @@ class Line(object):
         else:
             return self.next_buses[0]
 
+
 class Direction(object):
     """docstring for Direction"""
     def __init__(self, name):
         super(Direction, self).__init__()
         self.name = name
+
 
 class NextBus(object):
     """docstring for NextBus"""
@@ -44,15 +46,16 @@ class NextBus(object):
         super(NextBus, self).__init__()
         self.minutes = minutes
         self.direction = direction
-        
+
     def __str__(self):
         return "<NextBus in %s seconds>" % self.seconds
-        
-# DATABASE MODELS
+
+
 
 class Point(models.Model):
     lat = models.FloatField()
     lon = models.FloatField()
+
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -84,8 +87,6 @@ class Stop(models.Model):
         
         tree = ET.parse(self._get_data_from_webservice())
         
-        # print ET.dump(tree)
-        
         for l in tree.iter("Route"):
             # l for line
             next_buses = []
@@ -97,8 +98,6 @@ class Stop(models.Model):
                     next_buses.append(NextBus(b.text,
                                             direction))
                                             
-            # print map(str, next_buses)
-                    
             if next_buses:
                 # Create and populate a line
                 line_number = l.attrib.get("Code", None)
@@ -107,9 +106,6 @@ class Stop(models.Model):
                 
                 self.lines.append(Line(line_number, line_title, next_buses))
             
-                # logger.info("Created new busline %s, with first next bus in %s seconds." % (line_number, 
-                #                 next_buses[0].seconds))
-
     def get_url(self):
         return ABSOLUTE_URL+str(self.stop_id)
         
