@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+	
+<div>
+<form action="/next/api/location/" method="post" data-ajax="false" id="debug_geolocate">{% csrf_token %}
+	<div data-role="fieldcontain">
+	    <label for="stopid">Lat:</label>
+	    <input type="text" name="lat" id="lat" value="37.773327" />
+	</div>
+	<div data-role="fieldcontain">
+	    <label for="stopid">Lon:</label>
+	    <input type="text" name="lon" id="lon" value="-122.415735" />
+	</div>
+	<button type="submit" id="debug_geolocate_button">Submit</button>
+</form>
+</div>
+
+{% endblock %}

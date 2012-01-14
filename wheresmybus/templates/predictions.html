@@ -1,0 +1,13 @@
+{% for s in stops %}
+<h3>Stop “{{ s.name }}” #{{ s.stop_id }}</h3>
+
+<ul data-role="listview" data-inset="true">
+{% for line in s.lines %}
+	<li><strong>Line {{ line.number }}</strong> <span class="ui-li-count">{{ line.next_buses.0.minutes }} m</span></li>
+{% empty %}
+	<li>No next bus</li>
+{% endfor %}
+</ul>
+{% empty %}
+<p>There are no stops near you.</p>
+{% endfor %}

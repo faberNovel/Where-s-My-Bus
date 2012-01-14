@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>Generating QR Codes</title>
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<style>
+	
+	.stop {
+		display: inline-block;
+		border: solid 1px black;
+		padding: 5px;
+	}
+	
+	</style>
+
+</head>
+<body>
+
+{% block content %}
+
+{% if stops %}
+
+{% for stop in stops.object_list %}
+<div class="stop">
+	<img src="{{ stop.qrcode_image_url }}" />
+	<p><a href="{{ stop.get_url }}">Stop #{{ stop.stop_id }} ({{ stop.name }})</a></p>
+</div>
+{% endfor %}
+
+<div class="pagination">
+		<span class="current">
+			Page {{ stops.number }} of {{ stops.paginator.num_pages }}.
+		</span>
+</div>
+
+{% else %}
+
+<ul>
+	{% for n in page_range %}
+	<li><a href="?page={{ n }}">Page {{ n}}</a></li>
+	{% endfor %}
+</ul>
+
+{% endif %}
+
+{% endblock %}
+
+</body>
+</html>

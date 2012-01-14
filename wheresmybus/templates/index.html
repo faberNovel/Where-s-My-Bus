@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="predictions">
+{% block predictions %}
+<p><img src="/static/img/loading.gif" /> Loading predictions for stops near you…</p>
+{% endblock %}
+</div>
+
+<div id="stop_id_contain">
+<form action="" method="post" data-ajax="false" id="by_stop_id">{% csrf_token %}
+	<div data-role="fieldcontain">
+	    <label for="stopid">Stop id:</label>
+	    <input type="number" name="stopid" id="stopid" value="" placeholder="00000"  />
+	</div>
+	<button type="submit" id="stop_id_button">Submit</button>
+</form>
+</div>
+
+<div id="stops_near_me_contain">
+<form action="" method="post" data-ajax="false" id="stops_near_me">{% csrf_token %}
+	<button type="submit" id="stops_near_me_button">Find stops near me</button>
+</div>
+
+{% endblock %}

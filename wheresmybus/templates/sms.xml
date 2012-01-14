@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Response>
+<Sms>{% if not stop_id %}Please provide a stop id.
+{% else %}
+{% if stop_id_not_found %}There are no stop #{{ stop_id }}. Stop ids are 5 or 6 digits number (example: 13420).
+{% else %}
+{% if not line_provided %}No line provided.{% endif %}
+{% if line_id_not_found %}Line "{{ line_provided }}" not found at stop #{{ stop_id }}.{% endif %}
+
+{% if next_bus %}
+Next bus in {{ next_bus }} minute{{ next_bus|pluralize }} (line {{ line }}).
+{% else %}
+No next bus for line {{ line }} at stop #{{ stop }}.
+{% endif %}
+{% endif %}
+{% endif %}
+	</Sms>
+</Response>
