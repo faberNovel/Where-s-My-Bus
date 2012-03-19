@@ -25,7 +25,7 @@ class Line(object):
         self.number = number
         self.title = title
         self.next_buses = next_buses
-    
+
     def get_next_bus(self):
         if not self.next_buses:
             return None
@@ -51,7 +51,6 @@ class NextBus(object):
         return "<NextBus in %s seconds>" % self.seconds
 
 
-
 class Point(models.Model):
     lat = models.FloatField()
     lon = models.FloatField()
@@ -61,16 +60,16 @@ class Stop(models.Model):
     stop_id = models.IntegerField()
     name = models.CharField(max_length=255)
     loc = EmbeddedModelField(Point)
-    
+
     objects = MongoDBManager()
-    
+
     def __init__(self, *args, **kwargs):
         super(Stop, self).__init__(*args, **kwargs)
         self.lines = []
-    
+
     def __unicode__(self):
         return "Stop #%d" % stop_id
-        
+
     def _get_data_from_webservice(self):
         """Return data a file object from webservices.
         """
@@ -79,14 +78,14 @@ class Stop(models.Model):
         url = RTT_DATA_URL + NEXT_DEPARTURES_ENDPOINT + params
         logger.info("Calling %s" % url)
         f = urllib.urlopen(url)
-        
+
         return f
-        
+
     def update_predictions(self):
         # It's in fact line + direction
-        
+
         tree = ET.parse(self._get_data_from_webservice())
-        
+
         for l in tree.iter("Route"):
             # l for line
             next_buses = []
@@ -97,18 +96,18 @@ class Stop(models.Model):
                     # b for bus
                     next_buses.append(NextBus(b.text,
                                             direction))
-                                            
+
             if next_buses:
                 # Create and populate a line
                 line_number = l.attrib.get("Code", None)
                 line_title = l.attrib.get("Name", None)
                 next_buses.sort(key=lambda b: int(b.minutes))
-                
+
                 self.lines.append(Line(line_number, line_title, next_buses))
-            
+
     def get_url(self):
         return ABSOLUTE_URL+str(self.stop_id)
-        
+
     def qrcode_image_url(self):
         url_encoded = urllib.quote(self.get_url())
 
@@ -119,19 +118,3 @@ class Stop(models.Model):
         qrcode_url = GOOGLE_CHART_API_URL + "&".join([k + "=" + v for k,v in options.iteritems()])
 
         return qrcode_url
-        
-    def get_next_bus(self):
-        # find minimum
-        buses_eta = []
-        for l in self.lines:
-            buses_eta.append(int(l.get_next_bus().seconds))
-        minimum = min(buses_eta)
-        
-        next_bus = None
-        for l in self.lines:
-            if minimum == int(l.get_next_bus().seconds):
-                next_bus = l.get_next_bus()
-                next_bus.line_number = l.number
-                break
-        
-        return next_bus
