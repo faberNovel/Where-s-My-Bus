@@ -5,9 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.http import HttpResponseBadRequest, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseBadRequest
 
 from wheresmybus.next.models import Stop
 from wheresmybus.next.urls import STOP_ID_REGEX
